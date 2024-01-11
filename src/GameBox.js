@@ -7,6 +7,9 @@ function GameBox () {
 
   return(
     <>
+      <Title>
+        <p>색이 다른 네모를 찾아보세요!</p>
+      </Title>
       <Container>
         <div className="box">
           <DrowGameBox stage={stage} />
@@ -19,6 +22,11 @@ function GameBox () {
 export default GameBox;
 
 
+
+
+const Title = styled.div`
+
+`
 
 
 const Container = styled.div`
