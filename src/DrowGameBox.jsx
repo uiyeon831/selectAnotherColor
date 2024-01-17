@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
-function DrowGameBox ({stage, setStage, time, setTime, score, setScore}) {
+function DrowGameBox ({
+  stage, 
+  setStage, 
+  time, 
+  setTime, 
+  score, 
+  setScore,
+  opacity,
+  setOpacity,
+  countBarWidth,
+  setCountBarWidth,
+  setIsWrong
+}) {
   const [color, setColor] = useState('#000000');
   const [answerI, setAnswerI] = useState(1);
   const [answerJ, setAnswerJ] = useState(1);
@@ -30,13 +42,29 @@ function DrowGameBox ({stage, setStage, time, setTime, score, setScore}) {
   },[stage])
 
 
+  useEffect(()=>{
+    const opacityNum = Math.ceil((opacity + 0.01) * 100) / 100;
+    if(opacityNum < 0.99){
+      setOpacity(opacityNum);
+    } else {
+      setOpacity(0.98);
+    }
+  },[stage])
+
+
   const _click = (i, j) => {
     if(i === answerI && j === answerJ){
       setScore(score + (stage*time));
       setStage(stage + 1);
       setTime(15);
+      setCountBarWidth(100);
     } else if (time > 0) {
+      setIsWrong(true);
       setTime(time - 3);
+      setCountBarWidth(countBarWidth - 13.4);
+      setTimeout(() => {
+        setIsWrong(false);
+      }, 400);
     }
   }
 
@@ -50,11 +78,12 @@ function DrowGameBox ({stage, setStage, time, setTime, score, setScore}) {
                 return <Cell 
                 $randomColor={color}
                 className="answer"
+                $opacity={opacity}
                 onClick={()=>{_click(index+1, boxIndex+1)}} 
               />
               }else {
                 return <Cell 
-                  $randomColor={color}  
+                  $randomColor={color}
                   onClick={()=>{_click(index+1, boxIndex+1)}} 
                 />
               }
@@ -79,6 +108,6 @@ const Cell = styled.div`
   }
 
   &.answer {
-    opacity: 0.5;
+    opacity: ${(props) => (props.$opacity && props.$opacity)};
   }
 `
